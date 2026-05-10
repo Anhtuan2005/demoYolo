@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Security Monitor — Hệ thống giám sát an ninh</title>
+    <meta name="description" content="Hệ thống phát hiện kẻ nguy hiểm sử dụng AI YOLOv11">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header" id="main-header">
+        <div class="header-left">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                <div>
+                    <h1>AI Security Monitor</h1>
+                    <p class="subtitle">Hệ thống giám sát an ninh thông minh</p>
+                </div>
+            </div>
+        </div>
+        <div class="header-center">
+            <div class="threat-badge" id="threat-badge">
+                <span class="threat-dot" id="threat-dot"></span>
+                <span id="threat-text">LOW</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="uptime-chip">
+                <span class="chip-label">⏱ UPTIME</span>
+                <span class="chip-value" id="uptime-value">00:00:00</span>
+            </div>
+            <div class="stat-chip" id="fps-chip">
+                <span class="chip-label">FPS</span>
+                <span class="chip-value" id="fps-value">0</span>
+            </div>
+            <div class="stat-chip" id="status-chip">
+                <span class="status-dot" id="connection-dot"></span>
+                <span id="status-text">Connecting...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Left: Video Feed -->
+        <section class="video-section" id="video-section">
+            <div class="section-header">
+                <h2>📹 Live Camera Feed</h2>
+                <span class="source-label" id="source-label">—</span>
+            </div>
+            <div class="video-container">
+                <canvas id="video-canvas"></canvas>
+                <div class="video-overlay" id="video-overlay">
+                    <div class="loading-spinner"></div>
+                    <p>Đang kết nối camera...</p>
+                </div>
+            </div>
+
+            <!-- Threat Breakdown Bar -->
+            <div class="threat-breakdown">
+                <div class="breakdown-header">
+                    <span class="breakdown-title">THREAT BREAKDOWN</span>
+                    <span class="breakdown-total" id="breakdown-total">0 events</span>
+                </div>
+                <div class="breakdown-bar">
+                    <div class="bar-segment critical" id="bar-critical" style="width: 0%">
+                        <span class="bar-label">CRITICAL <span id="count-critical">0</span></span>
+                    </div>
+                    <div class="bar-segment high" id="bar-high" style="width: 0%">
+                        <span class="bar-label">HIGH <span id="count-high">0</span></span>
+                    </div>
+                    <div class="bar-segment medium" id="bar-medium" style="width: 0%">
+                        <span class="bar-label">MEDIUM <span id="count-medium">0</span></span>
+                    </div>
+                    <div class="bar-segment low" id="bar-low" style="width: 100%">
+                        <span class="bar-label">SAFE</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right: Info Panel -->
+        <aside class="info-panel">
+
+            <!-- Tech Stack Panel -->
+            <div class="tech-stack-panel">
+                <div class="tech-panel-header">
+                    <span class="tech-panel-title">⚙️ TECH STACK</span>
+                    <span class="tech-panel-badge">ACTIVE</span>
+                </div>
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <span class="tech-icon">🤖</span>
+                        <div class="tech-info">
+                            <span class="tech-label">Detector</span>
+                            <span class="tech-value">YOLOv11s</span>
+                        </div>
+                        <span class="tech-status ok">●</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">🔄</span>
+                        <div class="tech-info">
+                            <span class="tech-label">Tracker</span>
+                            <span class="tech-value">BoT-SORT</span>
+                        </div>
+                        <span class="tech-status ok">●</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">🪪</span>
+                        <div class="tech-info">
+                            <span class="tech-label">Re-ID</span>
+                            <span class="tech-value" id="reid-status">Initializing</span>
+                        </div>
+                        <span class="tech-status" id="reid-dot">●</span>
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-icon">🦾</span>
+                        <div class="tech-info">
+                            <span class="tech-label">Pose Est.</span>
+                            <span class="tech-value" id="pose-status">Initializing</span>
+                        </div>
+                        <span class="tech-status" id="pose-dot">●</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card" id="card-persons">
+                    <div class="stat-icon">👤</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="active-persons">0</span>
+                        <span class="stat-label">Người hiện tại</span>
+                    </div>
+                </div>
+                <div class="stat-card warning" id="card-weapons">
+                    <div class="stat-icon">🔪</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="active-weapons">0</span>
+                        <span class="stat-label">Vũ khí</span>
+                    </div>
+                </div>
+                <div class="stat-card" id="card-reid">
+                    <div class="stat-icon">🪪</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="reid-count">0</span>
+                        <span class="stat-label">Re-ID Count</span>
+                    </div>
+                </div>
+                <div class="stat-card danger" id="card-alerts">
+                    <div class="stat-icon">🚨</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="total-alerts">0</span>
+                        <span class="stat-label">Tổng cảnh báo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Log -->
+            <div class="event-log-section">
+                <div class="section-header">
+                    <h2>📋 Lịch Sử Cảnh Báo</h2>
+                    <button class="btn-clear" id="btn-clear-log" title="Clear log">✕</button>
+                </div>
+                <div class="event-log" id="event-log">
+                    <div class="event-empty">
+                        <span>🔒</span>
+                        <p>Chưa có cảnh báo — Hệ thống đang giám sát</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Audio Alert -->
+    <audio id="alert-sound" preload="auto">
+        <source
+            src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUoGAACAgICAgICAgICAgICAgICAgICAgICAf3h2eHx/goSFh4iIiIiHhYOBfnx6eHd3d3d4eXp8foCBgoODg4ODggEAfnx7end3d3d3eHl6e31+gIGCg4ODg4KBgH58e3p4d3d3d3h5ent8fn+AgYKDg4ODgoGAfnx7enh3d3d3eHl6e3x+f4CBgoODg4OCgYB+fHt6eHd3d3d4eXp7fH5/gIGCg4ODg4KBgH58e3p4d3d3eHh5ent8fn+AgYKDg4OCgoGAfnx7enh3d3d4eHl6e3x+f4CBgoODg4OCgYB+fHt6eHd3eHh5ent8fn+AgYKCg4OCgoGAfnx7enh3d3h4eXp7fH5/gIGCgoODgoKBgH58e3p4eHh4eXp7fH5/gIGCgoODgoKBgH58e3p4eHh4eXp7fH5/gIGCgoODgoKBf358e3p4eHh4eXp7fH5/gIGCgoODgoKBf358e3p5eHh5eXp7fH5/gIGCgoODgoKBf358e3p5eHh5eXp7fH5/gIGCgoKDgoKBf358e3p5eHl5eXp7fH5/gIGCgoKDgoKBf358fHp5eXl5eXp7fH5/gIGCgoKCgoGBf358fHt5eXl5eXp7fH1/gIGCgoKCgoGBf358fHt5eXl5eXp7fH1/gIGCgoKCgoGBf358fHt5eXl5enp7fH1/gIGBgoKCgoGBf358fHt6eXl5enp7fH1+gIGBgoKCgoGBf358fHt6eXl6enp7fH1+gIGBgoKCgoGBf358fHt6enp6enp7fH1+gIGBgoKCgoGAf358fHt6enp6enp7fH1+gIGBgoKCgoGAf358fHt6enp6enp7fH1+f4GBgoKCgoGAf358fHt6enp6enp7fH1+f4CBgoKCgoGAf358fHt6enp6enp7fH1+f4CBgoKCgoGAf358fHt6enp6e3t7fH1+f4CBgoKCgYGAf358fHt6e3p6e3t7fH1+f4CBgoKCgYGAf358fHx7e3t6e3t7fH1+f4CBgYKCgYGAf358fHx7e3t7e3t7fH1+f4CAgYKCgYGAf358fHx7e3t7e3t7fH1+f4CAgYKBgYGAf358fHx7e3t7e3t7fH1+f4CAgYGBgYF/f358fHx7e3t7e3x7fH1+f4CAgYGBgYF/f358fHx8e3t7fHx7fH1+f4CAgYGBgYF/f358fHx8fHt7fHx8fH1+f3+AgYGBgYF/f358fHx8fHx7fHx8fH1+f3+AgYGBgYF/f358fHx8fHx8fHx8fH1+f3+AgYGBgIF/f358fHx8fHx8fHx8fX1+f3+AgYGBgIF/fn58fHx8fHx8fHx8fX1+f3+AgYGBgIF/fn58fHx8fHx8fHx8fX5+f3+AgYGBgIF/fn58fHx8fHx8fX18fX5+f3+AgICBgIF/fn57"
+            type="audio/wav">
+    </audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+
+</html>

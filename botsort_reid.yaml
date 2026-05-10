@@ -1,0 +1,24 @@
+# BoT-SORT — Custom config for dangerous person detection
+# Based on ultralytics default botsort.yaml
+
+tracker_type: botsort
+
+# Tracking parameters
+track_high_thresh: 0.45
+track_low_thresh: 0.1
+new_track_thresh: 0.5
+track_buffer: 60
+match_thresh: 0.8
+fuse_score: true
+
+# BoT-SORT specifics — Global motion compensation
+# 'none' = camera cố định → tắt optical flow
+gmc_method: none
+
+# ReID — TẮT built-in Re-ID của Ultralytics
+# Lý do: ta đã có ReIDGallery riêng (core/reid_gallery.py) xử lý Re-ID
+# Built-in Re-ID chạy CNN trên MỌI detection MỌI frame → cực kỳ tốn tài nguyên
+# ReIDGallery chỉ chạy khi cần (ID mới, hoặc mỗi 15 frame)
+proximity_thresh: 0.5
+appearance_thresh: 0.25
+with_reid: false

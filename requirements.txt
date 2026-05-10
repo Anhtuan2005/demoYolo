@@ -1,0 +1,25 @@
+# YOLOv11 & Computer Vision
+ultralytics>=8.3.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# Web Dashboard
+flask>=3.0.0
+flask-socketio>=5.3.0
+gevent>=23.9.0
+gevent-websocket>=0.10.1
+
+# Telegram Notifications
+requests>=2.31.0
+
+# Database
+# (sqlite3 is built-in)
+
+# Environment Variables
+python-dotenv>=1.0.0
+
+# Image Processing
+Pillow>=10.0.0
+
+# PyTorch with CUDA (for RTX 2050)
+# Install separately: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
