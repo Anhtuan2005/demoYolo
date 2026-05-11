@@ -21,17 +21,20 @@ DATA_DIR.mkdir(exist_ok=True)
 # ============================================================
 # Model Configuration
 # ============================================================
-MODEL_DETECT = "yolo11s.pt"                                # detect người (COCO)
-MODEL_WEAPONS = "runs/detect/train-8/weights/best.pt" 
+MODEL_DETECT = "yolo11n.pt"                              # COCO → detect person + knife
+MODEL_DETECT_CUSTOM = "runs/detect/train-7/weights/best.pt"  # Custom → detect scissors
 MODEL_POSE = "yolo11s-pose.pt"                              # Pose estimation model (small)
 CONFIDENCE_THRESHOLD = float(os.getenv("CONFIDENCE_THRESHOLD", "0.35"))
 IOU_THRESHOLD = 0.5
 
 # COCO class IDs cho detection
-PERSON_CLASS = 0
-WEAPON_CLASSES = [0]
-# Tất cả class cần detect
-TARGET_CLASSES = [PERSON_CLASS] + WEAPON_CLASSES
+PERSON_CLASS = 0          # COCO class 0 = person
+WEAPON_CLASSES = {
+    43: "knife",
+    0: "scissors",        # custom model class 0 = scissors
+}
+TARGET_CLASSES = [0, 43]  # cho COCO model
+TARGET_CLASSES_CUSTOM = [0]  # cho custom model
 
 # ============================================================
 # Tracker Configuration (BoTSORT + Re-ID)
